@@ -15,7 +15,9 @@ async function start() {
   await fetchCities();
   await mergeStatesAndCities();
   await createStateFiles();
-  console.log(globalStates.length);
+  await searchStateByLabel('ES');
+  await totalCitiesByState('ES');
+  await console.log(globalStates.length);
   console.log(globalCities.length);
 }
 
@@ -75,7 +77,7 @@ async function mergeStatesAndCities() {
 async function createStateFiles() {
   console.log('createStateFiles');
   globalStates.forEach((file) => {
-    console.log(file.stateLabel);
+    // console.log(file.stateLabel);
 
     let cityState = [];
     globalCities.forEach((city) => {
@@ -90,4 +92,31 @@ async function createStateFiles() {
   });
 }
 
+async function searchStateByLabel(labelToSearch) {
+  try {
+    let data = [];
+    data = await readFile(labelToSearch + '.json', 'utf8');
+    // console.log(data);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function totalCitiesByState(labelToSearch) {
+  try {
+    let data = [];
+    let citiesByState = [];
+    data = await readFile(labelToSearch + '.json', 'utf8');
+    const json = JSON.parse(data);
+    let index = null;
+    json.forEach((e) => {
+      citiesByState.push(e.cityName);
+      index++;
+    });
+    return index;
+  } catch (error) {
+    console.log(error);
+  }
+}
 start();
