@@ -7,6 +7,9 @@ import winston from 'winston';
 const readFile = promises.readFile;
 const writeFile = promises.writeFile;
 
+global.fileNameCities = 'Cidades.json';
+global.fileNameStates = 'Estados.json';
+
 const app = express();
 
 app.use(express.json());
@@ -36,4 +39,21 @@ app.listen(3000, async () => {
 app.get('/test', (req, res) => {
   res.send('API Running... GET Method');
   logger.info('GET /test - API Running...');
+});
+
+app.get('/states', async (_, res) => {
+  try {
+    let data = await readFile(fileNameStates, 'utf-8');
+    let json = JSON.parse(data);
+    res.send(json);
+
+    logger.info(
+      'GET /states - arquivo lido com sucesso! Nome do Arquivo: ' +
+        fileNameStates
+    );
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).send({ error: err.message });
+    logger.error(`GET /states - ${error.message}`);
+  }
 });
