@@ -8,6 +8,7 @@ let globalStatesAndCities = null;
 
 const allStates = [];
 const allCities = [];
+const totalCitiesState = [];
 
 async function start() {
   console.log('started...');
@@ -17,8 +18,11 @@ async function start() {
   await createStateFiles();
   await searchStateByLabel('ES');
   await totalCitiesByState('ES');
-  await console.log(globalStates.length);
+  console.log(globalStates.length);
   console.log(globalCities.length);
+  await countTotalCitiesState();
+  await fiveStateWithMoreCities();
+  await fiveStateWithLessCities();
 }
 
 async function fetchStates() {
@@ -71,7 +75,7 @@ async function mergeStatesAndCities() {
 
     globalStatesAndCities.push({ ...city, ...cityState });
   });
-  //  console.log(globalStatesAndCities);
+  // console.log(globalStatesAndCities);
 }
 
 async function createStateFiles() {
@@ -80,14 +84,19 @@ async function createStateFiles() {
     // console.log(file.stateLabel);
 
     let cityState = [];
+    var totalCities = null;
     globalCities.forEach((city) => {
       // console.log(city);
       if (city.citiesState === file.stateId) {
-        cityState.push({ cityName: city.citiesName });
+        cityState.push({
+          cityName: city.citiesName,
+          nameLength: city.citiesName.length,
+        });
+        totalCities++;
       }
     });
     // console.log(cityState);
-
+    totalCitiesState.push({ state: file.stateLabel, totalCities: totalCities });
     writeFile(file.stateLabel + '.json', JSON.stringify(cityState));
   });
 }
@@ -114,9 +123,40 @@ async function totalCitiesByState(labelToSearch) {
       citiesByState.push(e.cityName);
       index++;
     });
-    return index;
+    //   console.log(index);
   } catch (error) {
     console.log(error);
+  }
+}
+
+async function countTotalCitiesState() {
+  // orderna
+  //console.log(totalCitiesState);
+  totalCitiesState.sort((a, b) => {
+    return b.totalCities - a.totalCities;
+  });
+  // for (let i = 0; i < 5; i++) {
+  //   console.log(totalCitiesState[i]);
+  // }
+
+  // console.log(totalCitiesState);
+}
+
+async function fiveStateWithMoreCities() {
+  totalCitiesState.sort((a, b) => {
+    return b.totalCities - a.totalCities;
+  });
+  for (let i = 0; i < 5; i++) {
+    console.log(totalCitiesState[i]);
+  }
+}
+
+async function fiveStateWithLessCities() {
+  totalCitiesState.sort((a, b) => {
+    return a.totalCities - b.totalCities;
+  });
+  for (let i = 0; i < 5; i++) {
+    console.log(totalCitiesState[i]);
   }
 }
 start();
