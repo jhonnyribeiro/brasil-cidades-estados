@@ -23,6 +23,7 @@ async function start() {
   await countTotalCitiesState();
   await fiveStateWithMoreCities();
   await fiveStateWithLessCities();
+  await largestNameByState();
 }
 
 async function fetchStates() {
@@ -51,11 +52,12 @@ async function fetchCities() {
 
     const dataCities = JSON.parse(cities);
 
-    globalCities = dataCities.map(({ ID, Nome, Estado }) => {
+    globalCities = dataCities.map(({ ID, Nome, Estado, nameLength }) => {
       return {
         citiesId: ID,
         citiesName: Nome,
         citiesState: Estado,
+        nameLength: Nome.length,
       };
     });
 
@@ -147,7 +149,7 @@ async function fiveStateWithMoreCities() {
     return b.totalCities - a.totalCities;
   });
   for (let i = 0; i < 5; i++) {
-    console.log(totalCitiesState[i]);
+    //  console.log(totalCitiesState[i]);
   }
 }
 
@@ -156,7 +158,16 @@ async function fiveStateWithLessCities() {
     return a.totalCities - b.totalCities;
   });
   for (let i = 0; i < 5; i++) {
-    console.log(totalCitiesState[i]);
+    //   console.log(totalCitiesState[i]);
   }
 }
+
+async function largestNameByState() {
+  globalCities.sort((a, b) => {
+    return b.nameLength - a.nameLength;
+  });
+
+  console.log(globalCities[0]);
+}
+
 start();
