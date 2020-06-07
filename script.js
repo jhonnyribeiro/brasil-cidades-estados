@@ -23,7 +23,8 @@ async function start() {
   await countTotalCitiesState();
   await fiveStateWithMoreCities();
   await fiveStateWithLessCities();
-  await largestNameByState();
+  await largestCityName();
+  await smallerCityName();
 }
 
 async function fetchStates() {
@@ -158,16 +159,25 @@ async function fiveStateWithLessCities() {
     return a.totalCities - b.totalCities;
   });
   for (let i = 0; i < 5; i++) {
-    //   console.log(totalCitiesState[i]);
+    console.log(totalCitiesState[i]);
   }
 }
 
-async function largestNameByState() {
+async function largestCityName() {
   globalCities.sort((a, b) => {
     return b.nameLength - a.nameLength;
   });
 
-  console.log(globalCities[0]);
+  // console.log(globalCities[0]);
+}
+
+async function smallerCityName() {
+  globalCities.sort((a, b) => {
+    return a.nameLength - b.nameLength;
+  });
+
+  //console.log(globalCities[0]);
+  // console.log(globalCities);
 }
 
 start();
